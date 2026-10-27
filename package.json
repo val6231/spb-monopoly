@@ -1,0 +1,19 @@
+{
+  "name": "monopoly-spbe",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Монополия. Санкт-Петербург — MVP веб-игра (Monopoly-like, СПб тематика)",
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev": "concurrently -n server,client \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:client": "npm --workspace client run dev",
+    "build": "npm --workspace client run build",
+    "start": "cross-env NODE_ENV=production npm --workspace server run start",
+    "test": "npm --workspace server run test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3"
+  }
+}

@@ -1,0 +1,480 @@
+{
+ "groups": {
+  "north": {
+   "name": "Северные районы",
+   "color": "#8ecae6",
+   "houseCost": 50
+  },
+  "center": {
+   "name": "Центр",
+   "color": "#a3b18a",
+   "houseCost": 50
+  },
+  "historic": {
+   "name": "Достопримечательности",
+   "color": "#e07a5f",
+   "houseCost": 100
+  },
+  "south": {
+   "name": "Юг города",
+   "color": "#e9c46a",
+   "houseCost": 100
+  },
+  "islands": {
+   "name": "Острова и Петергоф",
+   "color": "#f28482",
+   "houseCost": 150
+  },
+  "business": {
+   "name": "Деловой центр",
+   "color": "#b08968",
+   "houseCost": 200
+  }
+ },
+ "cells": [
+  {
+   "i": 0,
+   "type": "start",
+   "name": "Стрелка ВО",
+   "short": "СТАРТ",
+   "note": "Проход — ₽200"
+  },
+  {
+   "i": 1,
+   "type": "street",
+   "group": "north",
+   "name": "Парнас",
+   "price": 60,
+   "rent": [
+    2,
+    10,
+    30,
+    90,
+    360,
+    720
+   ]
+  },
+  {
+   "i": 2,
+   "type": "communal",
+   "name": "Водоканал",
+   "price": 150,
+   "rent": [
+    25,
+    50
+   ]
+  },
+  {
+   "i": 3,
+   "type": "chest",
+   "deck": "fund",
+   "name": "Городской фонд"
+  },
+  {
+   "i": 4,
+   "type": "tax",
+   "kind": "income",
+   "name": "Налог на доход",
+   "amount": 200
+  },
+  {
+   "i": 5,
+   "type": "station",
+   "name": "Финляндский вокзал",
+   "price": 200
+  },
+  {
+   "i": 6,
+   "type": "street",
+   "group": "center",
+   "name": "Сенная площадь",
+   "price": 100,
+   "rent": [
+    6,
+    30,
+    90,
+    270,
+    750,
+    1050
+   ]
+  },
+  {
+   "i": 7,
+   "type": "chance",
+   "deck": "bridges",
+   "name": "Разведённые мосты"
+  },
+  {
+   "i": 8,
+   "type": "street",
+   "group": "center",
+   "name": "Невский проспект",
+   "price": 100,
+   "rent": [
+    6,
+    30,
+    90,
+    270,
+    750,
+    1050
+   ]
+  },
+  {
+   "i": 9,
+   "type": "street",
+   "group": "center",
+   "name": "Маяковская",
+   "price": 120,
+   "rent": [
+    8,
+    40,
+    100,
+    300,
+    850,
+    1100
+   ]
+  },
+  {
+   "i": 10,
+   "type": "jail",
+   "name": "Кресты",
+   "short": "ТЮРЬМА",
+   "note": "Просто посещение"
+  },
+  {
+   "i": 11,
+   "type": "street",
+   "group": "historic",
+   "name": "Инженерная ул.",
+   "price": 140,
+   "rent": [
+    10,
+    50,
+    150,
+    450,
+    1250,
+    1500
+   ]
+  },
+  {
+   "i": 12,
+   "type": "utility",
+   "name": "Ленэнерго",
+   "price": 150,
+   "rent": [
+    25,
+    50
+   ]
+  },
+  {
+   "i": 13,
+   "type": "street",
+   "group": "historic",
+   "name": "Кузнечный пер.",
+   "price": 140,
+   "rent": [
+    10,
+    50,
+    150,
+    450,
+    1250,
+    1500
+   ]
+  },
+  {
+   "i": 14,
+   "type": "street",
+   "group": "historic",
+   "name": "Михайловский замок",
+   "price": 160,
+   "rent": [
+    12,
+    60,
+    180,
+    500,
+    1400,
+    1700
+   ]
+  },
+  {
+   "i": 15,
+   "type": "station",
+   "name": "Витебский вокзал",
+   "price": 200
+  },
+  {
+   "i": 16,
+   "type": "street",
+   "group": "south",
+   "name": "Нарская",
+   "price": 180,
+   "rent": [
+    14,
+    70,
+    200,
+    550,
+    1500,
+    1800
+   ]
+  },
+  {
+   "i": 17,
+   "type": "chest",
+   "deck": "fund",
+   "name": "Городской фонд"
+  },
+  {
+   "i": 18,
+   "type": "street",
+   "group": "south",
+   "name": "Купчино",
+   "price": 180,
+   "rent": [
+    14,
+    70,
+    200,
+    550,
+    1500,
+    1800
+   ]
+  },
+  {
+   "i": 19,
+   "type": "street",
+   "group": "south",
+   "name": "Бухарестская",
+   "price": 200,
+   "rent": [
+    16,
+    80,
+    220,
+    600,
+    1600,
+    1900
+   ]
+  },
+  {
+   "i": 20,
+   "type": "gotojail",
+   "name": "Обводная, 100",
+   "short": "В КРЕСТЫ",
+   "note": "Идите в Кресты"
+  },
+  {
+   "i": 21,
+   "type": "street",
+   "group": "islands",
+   "name": "Петропавловка",
+   "price": 220,
+   "rent": [
+    18,
+    90,
+    250,
+    700,
+    1800,
+    2100
+   ]
+  },
+  {
+   "i": 22,
+   "type": "chance",
+   "deck": "bridges",
+   "name": "Разведённые мосты"
+  },
+  {
+   "i": 23,
+   "type": "street",
+   "group": "business",
+   "name": "Автово",
+   "price": 220,
+   "rent": [
+    22,
+    110,
+    330,
+    800,
+    2000,
+    2300
+   ]
+  },
+  {
+   "i": 24,
+   "type": "street",
+   "group": "islands",
+   "name": "Крестовский",
+   "price": 240,
+   "rent": [
+    20,
+    100,
+    300,
+    750,
+    1900,
+    2200
+   ]
+  },
+  {
+   "i": 25,
+   "type": "station",
+   "name": "Московский вокзал",
+   "price": 200
+  },
+  {
+   "i": 26,
+   "type": "street",
+   "group": "business",
+   "name": "Лахта-центр",
+   "price": 260,
+   "rent": [
+    22,
+    110,
+    330,
+    800,
+    2000,
+    2300
+   ]
+  },
+  {
+   "i": 27,
+   "type": "street",
+   "group": "business",
+   "name": "Сити-башня",
+   "price": 260,
+   "rent": [
+    22,
+    110,
+    330,
+    800,
+    2000,
+    2300
+   ]
+  },
+  {
+   "i": 28,
+   "type": "chest",
+   "deck": "fund",
+   "name": "Городской фонд"
+  },
+  {
+   "i": 29,
+   "type": "street",
+   "group": "business",
+   "name": "Биржа",
+   "price": 280,
+   "rent": [
+    24,
+    120,
+    360,
+    850,
+    2100,
+    2400
+   ]
+  },
+  {
+   "i": 30,
+   "type": "parking",
+   "name": "Марсово поле",
+   "short": "ПОКОЙ",
+   "note": "Отдых"
+  },
+  {
+   "i": 31,
+   "type": "street",
+   "group": "historic",
+   "name": "Адмиралтейская",
+   "price": 300,
+   "rent": [
+    26,
+    130,
+    390,
+    900,
+    2200,
+    2500
+   ]
+  },
+  {
+   "i": 32,
+   "type": "chance",
+   "deck": "bridges",
+   "name": "Разведённые мосты"
+  },
+  {
+   "i": 33,
+   "type": "street",
+   "group": "historic",
+   "name": "Исаакий",
+   "price": 300,
+   "rent": [
+    26,
+    130,
+    390,
+    900,
+    2200,
+    2500
+   ]
+  },
+  {
+   "i": 34,
+   "type": "street",
+   "group": "historic",
+   "name": "Васильевский",
+   "price": 320,
+   "rent": [
+    28,
+    150,
+    450,
+    1000,
+    2300,
+    2600
+   ]
+  },
+  {
+   "i": 35,
+   "type": "station",
+   "name": "Ладожский вокзал",
+   "price": 200
+  },
+  {
+   "i": 36,
+   "type": "gotojail",
+   "name": "Дворцовый мост",
+   "short": "В КРЕСТЫ",
+   "note": "Идите в Кресты"
+  },
+  {
+   "i": 37,
+   "type": "street",
+   "group": "south",
+   "name": "Петергоф",
+   "price": 350,
+   "rent": [
+    30,
+    175,
+    500,
+    1100,
+    2400,
+    2700
+   ]
+  },
+  {
+   "i": 38,
+   "type": "tax",
+   "kind": "luxury",
+   "name": "Туристический сбор",
+   "amount": 100
+  },
+  {
+   "i": 39,
+   "type": "street",
+   "group": "south",
+   "name": "Ленинский проспект",
+   "price": 400,
+   "rent": [
+    50,
+    200,
+    600,
+    1400,
+    1800,
+    2000
+   ]
+  }
+ ]
+}

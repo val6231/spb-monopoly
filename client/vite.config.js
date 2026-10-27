@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    host: true, // доступ по IP машины — друзья в локальной сети смогут зайти
     proxy: {
       '/socket.io': { target: 'http://localhost:3001', ws: true },
       '/shared': { target: 'http://localhost:3001' },

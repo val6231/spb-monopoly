@@ -7,6 +7,8 @@ const { Server } = require('socket.io');
 const { registerHandlers } = require('./gameSocket');
 
 const PORT = process.env.PORT || 3001;
+// HOST=0.0.0.0 — чтобы в комнату могли зайти друзья по локальной сети
+const HOST = process.env.HOST || 'localhost';
 
 const app = express();
 const server = http.createServer(app);
@@ -29,4 +31,4 @@ app.get(/^\/(?!socket\.io|shared).*/, (_req, res) => {
 
 io.on('connection', socket => registerHandlers(io, socket));
 
-server.listen(PORT, () => console.log(`Монополия. СПб — сервер на http://localhost:${PORT}`));
+server.listen(PORT, HOST, () => console.log(`Монополия. СПб — сервер на http://${HOST === '0.0.0.0' ? '<IP-хоста>' : HOST}:${PORT}`));

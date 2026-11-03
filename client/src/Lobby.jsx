@@ -40,14 +40,17 @@ export default function Lobby({ snap, roomCode, error, setError, act, onLeave })
             ))}
           </div>
           <div className="row btns">
-            <button type="submit" disabled={!code.trim()}>Создать комнату</button>
+            <button type="button" disabled={!!code.trim() || !name.trim()}
+              onClick={() => { if (name.trim()) act('room:create', { name: name.trim(), token, color }); }}>
+              Создать комнату
+            </button>
             <input className="code" value={code} onChange={e => setCode(e.target.value.toUpperCase())} maxLength={4} placeholder="КОД" />
             <button type="button" disabled={code.trim().length !== 4 || !name.trim()}
               onClick={() => { if (name.trim()) act('room:join', { code: code.trim(), name: name.trim(), token, color }); }}>
               Войти по коду
             </button>
           </div>
-          <p className="hint">«Создать» — пустое поле КОД. Для MVP нужно 4–8 игроков (тестовый режим — от 2).</p>
+          <p className="hint">Введите имя, выберите фишку и цвет. «Создать» — если КОД пуст; «Войти» — с заполненным КОДОМ. Игроков в комнате: 2–8.</p>
         </form>
       ) : (
         <div className="card">

@@ -16,6 +16,7 @@ export default function PlayerPanel({ board, game, yourId }) {
             <div className="plhead">
               <span className="dot" style={{ background: p.color }}>{p.token}</span>
               <b>{p.name}</b>
+              {p.bot && <span title="бот">🤖</span>}
               <span className="money">₽{p.money}</span>
             </div>
             <div className="plstatus">

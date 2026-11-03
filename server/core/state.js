@@ -27,7 +27,7 @@ function createGame(playerDefs, seed = Date.now() >>> 0) {
     rngCursor: cursor.cursor,
     turnNo: 0,
     players: playerDefs.map(p => ({
-      id: p.id, name: p.name, token: p.token, color: p.color,
+      id: p.id, name: p.name, token: p.token, color: p.color, bot: !!p.bot,
       money: START_MONEY, pos: 0,
       inJail: false, jailTurns: 0, freeJailCards: 0,
       bankrupt: false, skipNextRoll: false,

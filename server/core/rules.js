@@ -180,9 +180,9 @@ function jailTurn(state, isDouble) {
   }
   if (pl.jailTurns >= 3) {
     log(state, `${pl.name} сидел 3 хода — обязанный штраф ₽50`);
+    pl.inJail = false; pl.jailTurns = 0;   // освобождаем ДО оплаты, чтобы при нехватке денег не остаться «в Крестах» с долгом
     pay(state, pl, 50, null);
     if (!pl.bankrupt) {
-      pl.inJail = false; pl.jailTurns = 0;
       moveBy(state, pl, state.dice[0] + state.dice[1]);
       resolveLanding(state, state.current, { allowBuy: true });
     }

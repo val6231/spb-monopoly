@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { TOKENS, COLORS } from './socket.js';
 
-// Лобби: создать комнату или войти по коду; имя, фишка, цвет. После входа — список и старт (хост).
+// Лобби: создать комнату или войти по коду; имя, фишка, цвет. Хост может добавлять ботов (2–8 участников всего).
 export default function Lobby({ snap, roomCode, error, setError, act, onLeave }) {
   const [name, setName] = useState('');
   const [token, setToken] = useState(TOKENS[0]);
   const [color, setColor] = useState(COLORS[0]);
+  const [botToken, setBotToken] = useState(TOKENS[7]);
+  const [botColor, setBotColor] = useState(COLORS[1]);
   const [code, setCode] = useState('');
   const inRoom = !!roomCode && !!snap;
+  const full = inRoom && snap.lobby.length >= 8;
 
   function submit(e) {
     e.preventDefault();
@@ -63,14 +66,30 @@ export default function Lobby({ snap, roomCode, error, setError, act, onLeave })
               <li key={p.id} className={p.id === snap.yourId ? 'me' : ''}>
                 <span className="dot" style={{ background: p.color }}>{p.token}</span>
                 {p.name}
-                <em>{p.online ? 'в сети' : 'не в сети'}</em>
-                {p.id === snap.lobby[0]?.id && snap.isHost && null}
+                {p.bot
+                  ? <>
+                      <em>бот 🤖</em>
+                      {snap.isHost && <button type="button" className="ghost x" onClick={() => act('room:removeBot', { playerId: p.id })}>✕</button>}
+                    </>
+                  : <em>{p.online ? 'в сети' : 'не в сети'}</em>}
               </li>
             ))}
           </ul>
+          {snap.isHost && !full && (
+            <div className="row bots">
+              <span>Бот:</span>
+              {TOKENS.map(t => (
+                <button type="button" key={t} className={'pick' + (t === botToken ? ' on' : '')} onClick={() => setBotToken(t)}>{t}</button>
+              ))}
+              {COLORS.map(c => (
+                <button type="button" key={c} className={'swatch' + (c === botColor ? ' on' : '')} style={{ background: c }} onClick={() => setBotColor(c)} />
+              ))}
+              <button type="button" onClick={() => act('room:addBot', { token: botToken, color: botColor })}>+ Добавить бота</button>
+            </div>
+          )}
           <div className="row btns">
             {snap.isHost
-              ? <button onClick={() => act('game:start')}>Начать игру ({snap.lobby.length})</button>
+              ? <button disabled={snap.lobby.length < 2} onClick={() => act('game:start')}>Начать игру ({snap.lobby.length})</button>
               : <span className="hint">Ждём, когда ведущий начнёт игру…</span>}
           </div>
         </div>

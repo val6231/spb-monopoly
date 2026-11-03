@@ -30,25 +30,35 @@ function applyAction(state, playerId, action) {
       } else P.decline(state, i, cell);
       state.pendingBuy = null;
       state.phase = 'end';
+      R.autoFinishTurn(state);   // если не дубль — ход закрывается сразу
       return { ok: true };
     }
 
     case 'build': {
       const cell = Number(action.cell);
       if (!state.props[cell] || state.props[cell].owner !== pl.id) return { ok: false, err: 'Не ваш участок' };
-      return P.build(state, i, cell, !!action.up);
+      const r = P.build(state, i, cell, !!action.up);
+      if (r.ok && state.phase === 'end') R.autoFinishTurn(state);  // боты строят «внутри» закрытого хода
+      return r;
     }
 
     case 'mortgage': {
       const cell = Number(action.cell);
       if (!state.props[cell] || state.props[cell].owner !== pl.id) return { ok: false, err: 'Не ваше имущество' };
-      return P.mortgage(state, i, cell, !!action.on);
+      const r = P.mortgage(state, i, cell, !!action.on);
+      if (r.ok && state.phase === 'end') R.autoFinishTurn(state);
+      return r;
     }
 
     case 'jailPay':
     case 'jailCard': {
       const r = action.type === 'jailPay' ? R.jailPayExit(state) : R.jailCardExit(state);
-      if (r.ok && r.rolled) R.doRoll(state);   // освобождённый сразу бросает и идёт
+      if (r.ok && r.rolled) {
+        // освобождённый сразу бросает; если выпал дубль — доп. ход только после явного endTurn
+        const dblBefore = state.doubles;
+        R.doRoll(state);
+        if (!state.finished && state.phase === 'end' && state.doubles > dblBefore) state.doubles = dblBefore;
+      }
       return r;
     }
 

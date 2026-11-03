@@ -166,3 +166,9 @@ ul.players li em { margin-left: auto; color: var(--muted); font-style: normal; f
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--panel);
   border: 1px solid var(--accent); padding: 10px 16px; border-radius: 10px; z-index: 40; max-width: 420px; }
 .toast b { color: var(--accent); display: block; margin-bottom: 2px; }
+
+/* --- боты в лобби --- */
+.row.bots { flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; padding: 8px; border: 1px dashed var(--accent); border-radius: 10px; }
+.row.bots .pick { width: 32px; height: 32px; font-size: 15px; }
+.row.bots .swatch { width: 20px; height: 20px; }
+li .x { padding: 2px 8px; margin-left: 6px; font-size: 12px; }

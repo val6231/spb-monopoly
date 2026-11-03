@@ -37,7 +37,10 @@ test('bots: host adds 3 bots, game auto-plays to finish', async () => {
     assert.strictEqual(snap.lobby.filter(p => p.bot).length, 3);
 
     a.emit('game:start', {});
-    snap = await waitEvent(a, 'state:update');
+    // ждём снимок именно со стартовавшей партией (могли прийти лишние state:update от addBot)
+    for (let guard = 0; guard < 20 && !snap.game; guard++) {
+      snap = await waitEvent(a, 'state:update');
+    }
     assert.ok(snap.game);
     assert.strictEqual(snap.game.players.filter(p => p.bot).length, 3);
 

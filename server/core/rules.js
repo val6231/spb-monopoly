@@ -96,31 +96,42 @@ function checkWin(state) {
 
 // ---- разрешение клетки прибытия ----
 // opts.allowBuy=false (например, приведена картой на Кресты как посещение) — покупки нет
+// Возвращает true, если после разрешения нужен ещё один бросок (дубль или карта).
 function resolveLanding(state, plIdx, opts = {}) {
   const pl = state.players[plIdx];
   const cell = pl.pos, c = board.cells[cell];
-  if (c.type === 'gotojail') { C.goToJail(state, pl); state.phase = 'end'; return; }
-  if (c.type === 'tax') { pay(state, pl, c.amount, null); log(state, `${pl.name} платит «${c.name}» ₽${c.amount}`); state.phase = 'end'; return; }
+  if (c.type === 'gotojail') { C.goToJail(state, pl); state.phase = 'end'; return false; }
+  if (c.type === 'tax') { pay(state, pl, c.amount, null); log(state, `${pl.name} платит «${c.name}» ₽${c.amount}`); state.phase = 'end'; return false; }
   if (c.type === 'chance' || c.type === 'chest') {
     const r = C.applyCard(state, plIdx, c.deck);
-    if (r.extraRoll) { state.doubles = 0; state.phase = 'roll'; return; } // повторный бросок
+    if (r.extraRoll) { state.doubles = 0; state.phase = 'roll'; return true; } // повторный бросок
     if (state.phase !== 'buy') state.phase = 'end';
-    return;
+    return false;
   }
   if (['street', 'station', 'utility', 'communal'].includes(c.type)) {
     const pr = state.props[cell];
     if (!pr && opts.allowBuy !== false) {
       state.pendingBuy = cell; state.phase = 'buy';   // предложение покупки
-      return;
+      return false;
     }
     if (pr && pr.owner !== pl.id) {
       const rent = P.rentOf(state, cell, sumDice(state));
       if (rent > 0) { pay(state, pl, rent, state.players.find(p => p.id === pr.owner)); }
     }
-    state.phase = 'end'; return;
+    state.phase = 'end'; return false;
   }
   if (c.type === 'start') { /* доплата уже начислена при проходе */ }
   state.phase = 'end';
+  return false;
+}
+
+// Завершение хода сразу, если бросившему нечего решать: фаза 'end' без предложения покупки.
+// Дубли не авто-закрываем (игрок может строить между бросками), но после 3-го дубля — можно.
+function autoFinishTurn(state) {
+  if (state.finished || state.phase !== 'end') return;
+  if (state.pendingBuy !== null) return;
+  if (state.doubles > 0 && state.doubles < 3) return;
+  endTurn(state);
 }
 
 function sumDice(state) { return state.dice ? state.dice[0] + state.dice[1] : 7; }
@@ -164,7 +175,8 @@ function doRoll(state) {
   } else state.doubles = 0;
 
   moveBy(state, pl, d1 + d2);
-  resolveLanding(state, state.current, { allowBuy: true });
+  const needExtra = resolveLanding(state, state.current, { allowBuy: true });
+  if (!needExtra) autoFinishTurn(state);
 }
 
 // Тюрьма «Кресты»: выход дублем / оплатой 50 / картой; максимум 3 хода
@@ -175,7 +187,8 @@ function jailTurn(state, isDouble) {
     log(state, `${pl.name} выходит из Крестов по дублю!`);
     pl.inJail = false; pl.jailTurns = 0; state.doubles = 0;
     moveBy(state, pl, state.dice[0] + state.dice[1]);
-    resolveLanding(state, state.current, { allowBuy: true });
+    const needExtra = resolveLanding(state, state.current, { allowBuy: true });
+    if (!needExtra) autoFinishTurn(state);
     return;
   }
   if (pl.jailTurns >= 3) {
@@ -184,12 +197,16 @@ function jailTurn(state, isDouble) {
     pay(state, pl, 50, null);
     if (!pl.bankrupt) {
       moveBy(state, pl, state.dice[0] + state.dice[1]);
-      resolveLanding(state, state.current, { allowBuy: true });
+      const needExtra = resolveLanding(state, state.current, { allowBuy: true });
+      if (!needExtra) autoFinishTurn(state);
+    } else {
+      state.phase = 'end';
     }
     return;
   }
   log(state, `${pl.name} сидит в Крестах (ход ${pl.jailTurns}/3)`);
   state.phase = 'end';
+  autoFinishTurn(state);
 }
 
 // Платный выход ДО броска (действие игрока)
@@ -240,6 +257,6 @@ function advanceCurrent(state) {
 }
 
 module.exports = {
-  doRoll, endTurn, jailPayExit, jailCardExit, resolveLanding,
+  doRoll, endTurn, jailPayExit, jailCardExit, resolveLanding, autoFinishTurn,
   makeBankrupt, trySettleOrBankrupt, checkWin, moveBy, pay, sumDice,
 };

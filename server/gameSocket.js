@@ -25,7 +25,16 @@ function botStep(io, room) {
   if (!pl.bot || pl.bankrupt) return;
   const intent = botAI.decide(st, pl);
   if (intent) {
-    const res = applyAction(st, pl.id, intent);
+    let res = applyAction(st, pl.id, intent);
+    // ход уже мог закрыться автоматически (например, build/mortgage в закрытой фазе) —
+    // тогда повторим то же намерение за новым активным ботом
+    while (!res.ok && res.err === 'Сейчас не ваш ход' && !st.finished) {
+      const np = st.players[st.current];
+      if (!np.bot || np.bankrupt) break;
+      const ni = botAI.decide(st, np);
+      if (!ni) break;
+      res = applyAction(st, np.id, ni);
+    }
     if (!res.ok) {     // на случай гонки — просто закончим ход
       applyAction(st, pl.id, { type: 'endTurn' });
     }

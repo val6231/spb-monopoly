@@ -55,7 +55,7 @@ function decide(state, pl) {
     if (pl.inJail) {
       // принудительный выход на 3-м ходу ядро делает само при броске — не платить заранее
       if (pl.freeJailCards > 0 && pl.jailTurns < 2) return { type: 'jailCard' };
-      if (pl.jailTurns === 1 && pl.money >= 150) return { type: 'jailPay' };  # выйти пораньше, но с запасом
+      if (pl.jailTurns === 1 && pl.money >= 150) return { type: 'jailPay' };  // выйти пораньше, но с запасом
       return { type: 'roll' };
     }
     return { type: 'roll' };
@@ -65,7 +65,9 @@ function decide(state, pl) {
     if (m != null) return { type: 'mortgage', cell: m, on: true };
     const b = buildChoice(state, pl);
     if (b != null) return { type: 'build', cell: b, up: true };
-    return { type: 'endTurn' };
+    // дубль без предложения покупки — ядро оставило extraRoll; бот обязан закрыть ход сам
+    if (state.doubles > 0 && state.pendingBuy === null) return { type: 'endTurn' };
+    return null;   // обычный end: человек может строить/закладывать сам
   }
   return null;
 }

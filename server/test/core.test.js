@@ -29,11 +29,17 @@ test('бросок перемещает; endTurn передаёт ход', () =>
   s.fixedDice = [2, 3]; // не дубль → без доп. хода
   assert.equal(act(s, 'p1', { type: 'roll' }).ok, true);
   assert.equal(s.players[0].pos, 5);
-  assert.ok(['buy','end'].includes(s.phase), 'phase=' + s.phase);
-  if (s.phase === 'buy') assert.equal(act(s, 'p1', { type: 'buy', decision: 'decline' }).ok, true);
-  assert.equal(act(s, 'p1', { type: 'endTurn' }).ok, true);
-  assert.equal(s.current, 1);
-  assert.equal(s.phase, 'roll');
+  if (s.phase === 'buy') {
+    // после отказа ход закрывается автоматически — явного endTurn уже нет
+    assert.equal(act(s, 'p1', { type: 'buy', decision: 'decline' }).ok, true);
+    assert.equal(s.current, 1);
+    assert.equal(s.phase, 'roll');
+  } else {
+    assert.ok(['end'].includes(s.phase), 'phase=' + s.phase);
+    assert.equal(act(s, 'p1', { type: 'endTurn' }).ok, true);
+    assert.equal(s.current, 1);
+    assert.equal(s.phase, 'roll');
+  }
 });
 
 test('покупка списывает цену; отказ оставляет у банка', () => {
@@ -174,8 +180,7 @@ test('тюрьма: оплата 50 → сразу бросок и ход', () =
   assert.equal(r.ok, true);
   assert.equal(pl.inJail, false);
   assert.equal(pl.pos, 17);          // chest «Городской фонд» — карта применена
-  assert.equal(s.phase, 'end');
-  // карта на 17 детерминирована seed'ом — сверяем деньги по факту карты
+  // карта на 17 детерминирована seed'ом — сверяем деньги по факту вытянутой карты
   const cardsData = require('../../shared/cards.json');
   const drawn = s.lastCard;
   assert.equal(drawn.deck, 'fund');
